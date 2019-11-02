@@ -1,7 +1,6 @@
 //import "./styles.css";
-
 // const ttt contains cells of table board
-
+//var mongoose = require("mongoose");
 // This is straight from course material, checks that document is loaded before any game functions are called
 if (document.readyState !== "loading") {
   // Document ready, executing
@@ -15,7 +14,16 @@ if (document.readyState !== "loading") {
     initializeCode();
   });
 }
-
+// Mongo DB
+/*const MongoClient = require("mongodb").MongoClient;
+const uri =
+  "mongodb+srv://jallu:saab9000aerohot@cluster0-klm10.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("game").collection("playBoard");
+  collection.insert({ name: "John Wick 2" });
+  client.close();
+});*/
 // Other variables and constants
 
 var playBoard; // Will be an array containing all the moves players has made
@@ -44,23 +52,28 @@ const winner = [
 ];
 
 function initializeCode() {
-  startGame();
+  //startGame();
+  getGameStatus();
   replayFunction();
 }
 // This function will start the game, makes playBoard array for moves and then initializes click action to every cell
+
+function getGameStatus() {}
+
 function startGame() {
   const ttt = document.querySelectorAll(".ttt");
-  playBoard = Array.from(Array(25).keys());
+  window.playBoard = Array.from(Array(25).keys());
+  //--> playBoard to mongoDB
 
   for (var i = 0; i < ttt.length; i++) {
-    ttt[i].innerText = "#";
+    ttt[i].innerText = "";
 
     ttt[i].addEventListener("click", clickCell, false);
   }
 }
 // Function containing to actions for cell clikcs
 function clickCell(cells) {
-  if (document.getElementById(cells.target.id).innerText === "#") {
+  if (document.getElementById(cells.target.id).innerText === "") {
     if (Player === one) {
       Player = two;
     } else if (Player === two) {
@@ -73,8 +86,10 @@ function clickCell(cells) {
 // Trun function wich marks the players moves on array and checks if player has won after a move with gameOver function
 function turn(cellsId, player) {
   playBoard[cellsId] = player;
+  //--> playBoard to mongoDB
   document.getElementById(cellsId).innerText = player;
   gameOver(player);
+  //index.mongo(playBoard);
 }
 // This function will check if player has won
 function gameOver(player) {
@@ -99,6 +114,7 @@ function gameOver(player) {
     }
   }
 }
+
 // Action for replay button, starts the game from the start
 function replayFunction() {
   document
